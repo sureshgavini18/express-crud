@@ -1,3 +1,4 @@
+
 import express from "express";
 
 const app = express();
@@ -6,10 +7,25 @@ app.use(express.json());
 
 const products = [];
 
+// HOME ROUTE
+app.get("/", (req, res) => {
+    res.send(`
+        <h1>Express CRUD API</h1>
+        <p>Server is running successfully!</p>
+        <h3>Available Routes:</h3>
+        <ul>
+            <li>POST /products</li>
+            <li>GET /products</li>
+            <li>GET /products/:id</li>
+            <li>PUT /products/:id</li>
+            <li>DELETE /products/:id</li>
+        </ul>
+    `);
+});
+
 // CREATE - POST
 app.post("/products", (req, res) => {
     const product = req.body;
-
     products.push(product);
 
     res.status(201).json({
@@ -94,7 +110,12 @@ app.delete("/products/:id", (req, res) => {
     }
 });
 
-// START SERVER
-app.listen(3500, () => {
-    console.log("Express server running at http://localhost:3500");
-});
+// EXPORT FOR VERCEL
+export default app;
+
+// LOCAL SERVER
+if (process.env.NODE_ENV !== "production") {
+    app.listen(3500, () => {
+        console.log("Server running at http://localhost:3500");
+    });
+}
